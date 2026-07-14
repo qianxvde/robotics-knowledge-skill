@@ -1,0 +1,6 @@
+[submodule "knowledge/Robotics_Tutorial"]
+	path = knowledge/Robotics_Tutorial
+	url = https://github.com/Michael-Jetson/Robotics_Tutorial.git
+[submodule "knowledge/Robotics_Theory"]
+	path = knowledge/Robotics_Theory
+	url = https://github.com/Michael-Jetson/Robotics_Theory.git

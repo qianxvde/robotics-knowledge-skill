@@ -1,0 +1,8 @@
+interface:
+  display_name: "Robotics Tutorial and Theory"
+  short_description: "Search robotics knowledge before engineering changes"
+  default_prompt: "Use $robotics-tutorial to search both robotics knowledge bases and apply relevant engineering guidance."
+
+policy:
+  allow_implicit_invocation: true
+
