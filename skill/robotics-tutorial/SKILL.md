@@ -38,24 +38,41 @@ implementation plan.
 
 ## Search procedure
 
-Prefer the bundled deterministic helper. Resolve the installed skill directory
-from `CODEX_HOME` instead of assuming a machine-specific path:
+Prefer the bundled deterministic helper. Resolve the installed skill directory from
+the host skill home instead of assuming a machine-specific path:
+
+- Codex: `${CODEX_HOME:-$HOME/.codex}/skills/robotics-tutorial`
+- Cursor personal: `$HOME/.cursor/skills/robotics-tutorial`
+- Cursor project: `<repo>/.cursor/skills/robotics-tutorial`
+- Override: `ROBOTICS_TUTORIAL_SKILL_ROOT`
 
 ```bash
-python "${CODEX_HOME:-$HOME/.codex}/skills/robotics-tutorial/scripts/search_robotics_knowledge.py" \
+SKILL_ROOT="${ROBOTICS_TUTORIAL_SKILL_ROOT:-}"
+if [ -z "$SKILL_ROOT" ]; then
+  for candidate in \
+    "${CODEX_HOME:-$HOME/.codex}/skills/robotics-tutorial" \
+    "$HOME/.cursor/skills/robotics-tutorial"
+  do
+    if [ -f "$candidate/scripts/search_robotics_knowledge.py" ]; then
+      SKILL_ROOT=$candidate
+      break
+    fi
+  done
+fi
+python "$SKILL_ROOT/scripts/search_robotics_knowledge.py" \
   "AMP" "adversarial motion prior" "模仿学习"
 ```
 
 Useful options:
 
 ```bash
-python "${CODEX_HOME:-$HOME/.codex}/skills/robotics-tutorial/scripts/search_robotics_knowledge.py" \
+python "$SKILL_ROOT/scripts/search_robotics_knowledge.py" \
   --root theory "teacher student" "privileged learning"
 
-python "${CODEX_HOME:-$HOME/.codex}/skills/robotics-tutorial/scripts/search_robotics_knowledge.py" \
+python "$SKILL_ROOT/scripts/search_robotics_knowledge.py" \
   --regex --context 2 'sim.?to.?real|域随机化|domain randomization'
 
-python "${CODEX_HOME:-$HOME/.codex}/skills/robotics-tutorial/scripts/search_robotics_knowledge.py" \
+python "$SKILL_ROOT/scripts/search_robotics_knowledge.py" \
   --print-roots
 ```
 
@@ -152,4 +169,3 @@ For substantial work, include a compact note naming the tutorial and theory sour
 files that influenced the implementation, the applied point, validation performed,
 and any remaining unvalidated risk. If searches find no relevant guidance, say so
 and continue from repository evidence. Never invent a chapter or recommendation.
-

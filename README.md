@@ -1,7 +1,7 @@
 # Robotics Knowledge Skill
 
-A portable Codex skill that searches two complementary robotics knowledge bases
-before robotics engineering work:
+A portable Codex/Cursor skill that searches two complementary robotics knowledge
+bases before robotics engineering work:
 
 - [Robotics_Tutorial](https://github.com/Michael-Jetson/Robotics_Tutorial):
   Markdown tutorials and practical engineering notes.
@@ -29,8 +29,8 @@ on demand instead of loading the full corpus into the model context.
 
 ## Install
 
-Requirements: Git, Python 3.10 or later, and Codex. `ripgrep` is recommended
-for speed, but the search helper has a Python fallback.
+Requirements: Git, Python 3.10 or later, and Codex and/or Cursor. `ripgrep` is
+recommended for speed, but the search helper has a Python fallback.
 
 ```bash
 git clone --recurse-submodules git@github.com:qianxvde/robotics-knowledge-skill.git
@@ -38,18 +38,31 @@ cd robotics-knowledge-skill
 ./scripts/install.sh
 ```
 
-The installer creates a symbolic link under
-`${CODEX_HOME:-$HOME/.codex}/skills`, so the skill continues to see the bundled
-submodules after repository updates. Start a new Codex session after installing.
+By default the installer links the skill into both:
 
-If a skill with the same name already exists, review it first and then replace
-it explicitly:
+- Codex: `${CODEX_HOME:-$HOME/.codex}/skills/robotics-tutorial`
+- Cursor personal: `$HOME/.cursor/skills/robotics-tutorial`
+
+The links point at this repository checkout, so the skill continues to see the
+bundled submodules after repository updates. Start a new Codex or Cursor session
+after installing.
+
+Useful variants:
 
 ```bash
-./scripts/install.sh --force
-```
+# Codex only
+./scripts/install.sh --codex
 
-The old installation is moved to a timestamped backup; it is not deleted.
+# Cursor personal skill only
+./scripts/install.sh --cursor
+
+# Cursor project skill (for a specific repository)
+./scripts/install.sh --cursor-project /path/to/repo
+
+# Replace an existing installation; the old copy is timestamp-backed up
+./scripts/install.sh --force
+./scripts/install.sh --cursor-project /path/to/repo --force
+```
 
 ## Use with Codex
 
@@ -59,9 +72,22 @@ Invoke it explicitly when desired:
 Use $robotics-tutorial to review this humanoid locomotion reward design before editing.
 ```
 
+## Use with Cursor
+
+Invoke the skill explicitly, or rely on implicit invocation for robotics tasks:
+
+```text
+Use the robotics-tutorial skill to search both knowledge bases before editing.
+```
+
+In Cursor, personal skills under `~/.cursor/skills` apply across projects.
+Project skills under `<repo>/.cursor/skills` apply only inside that repository.
+
+## Skill behavior
+
 The skill also allows implicit invocation for robotics code, debugging,
 architecture, reward and observation design, deployment, and validation tasks.
-It instructs Codex to search in both Chinese and English, read the complete
+It instructs the agent to search in both Chinese and English, read the complete
 relevant sections, and validate suggestions against the target repository.
 
 ## Use the search helper directly
@@ -118,10 +144,10 @@ uses reproducible reference versions.
 
 ## 中文说明
 
-该仓库把两个机器人知识库作为子模块固定版本，并提供一个 Codex skill。
-安装后，在机器人代码修改、奖励/观测设计、强化学习、运动控制、仿真到实机、
-感知和 ROS2 等任务中，skill 会先按中英文关键词检索 Markdown 与 LaTeX
-源码，再把相关工程经验结合到当前项目，而不是盲目套用文档中的 API。
+该仓库把两个机器人知识库作为子模块固定版本，并提供一个同时适用于 Codex 与
+Cursor 的 skill。安装后，在机器人代码修改、奖励/观测设计、强化学习、运动控制、
+仿真到实机、感知和 ROS2 等任务中，skill 会先按中英文关键词检索 Markdown 与
+LaTeX 源码，再把相关工程经验结合到当前项目，而不是盲目套用文档中的 API。
 
 快速使用：
 
@@ -131,10 +157,17 @@ cd robotics-knowledge-skill
 ./scripts/install.sh
 ```
 
-然后在新的 Codex 会话中说：
+默认会同时安装到 Codex 与 Cursor 个人 skills 目录。也可以只装一侧：
+
+```bash
+./scripts/install.sh --cursor --force
+./scripts/install.sh --cursor-project /path/to/repo --force
+```
+
+然后在新的会话中说：
 
 ```text
-请使用 $robotics-tutorial 检索相关经验后，审查并修改这个机器人任务。
+请使用 robotics-tutorial 检索相关经验后，审查并修改这个机器人任务。
 ```
 
 仓库没有写死本机路径。默认使用随仓库下载的子模块；也可以通过环境变量、
@@ -146,4 +179,3 @@ The MIT license in this repository covers the wrapper skill, helper, installer,
 and documentation authored here. Each submodule remains an independent upstream
 project and retains its own copyright and licensing terms. Review those terms
 before redistributing upstream content.
-
